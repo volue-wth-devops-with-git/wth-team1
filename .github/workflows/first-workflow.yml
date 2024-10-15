@@ -23,7 +23,7 @@ jobs:
         uses: mscoutermarsh/cowsays-action@v1
         with:
           # What does the cow say?
-          text: # optional, default is Ship it!!!!!
+          text: 'What does the cow say?'
           # Color of your cow
-          color: # optional, default is white
+          color: 'blue'
               
