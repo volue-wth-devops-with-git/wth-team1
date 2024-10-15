@@ -1,0 +1,14 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: job1
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: echo1
+        run: "echo step1"
+      - name: echo2
+        run: "echo step2"
+        
