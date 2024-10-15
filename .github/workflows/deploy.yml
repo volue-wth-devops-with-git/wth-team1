@@ -9,8 +9,19 @@ jobs:
         - name: 'Checkout'
           uses: actions/checkout@v2
         - name: 'Deploy'
-          run: echo "Deploying!"
+          run: echo "Deploying to ${{ vars.RESOURCE_GROUP_NAME }}!"
         - name: 'Login to Azure'
           uses: azure/login@v1
           with:
               creds: ${{ secrets.SERVICE_PRINCIPAL }}
+        - name: 'Deploy ARM Template'
+          uses: azure/arm-deploy@v2
+          with:
+            scope: 'resourceGroup'
+            resourceGroupName: ${{ vars.RESOURCE_GROUP_NAME }}
+            # subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+            # tenantId: ${{ secrets.AZURE_TENANT_ID }}
+            # clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
+            # clientID: ${{ secrets.AZURE_CLIENT_ID }}
+            template: './InfrastructureAsCode/main.bicep'
+            deploymentMode: 'Incremental'
