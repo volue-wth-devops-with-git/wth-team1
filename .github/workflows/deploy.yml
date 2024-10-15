@@ -3,7 +3,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    deploy:
+    deploy_dev:
         runs-on: ubuntu-22.04
         steps:
         - name: 'Checkout'
@@ -19,9 +19,27 @@ jobs:
           with:
             scope: 'resourcegroup'
             resourceGroupName: ${{ vars.RESOURCE_GROUP_NAME }}
-            # subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-            # tenantId: ${{ secrets.AZURE_TENANT_ID }}
-            # clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
-            # clientID: ${{ secrets.AZURE_CLIENT_ID }}
             template: './InfrastructureAsCode/main.bicep'
+            parameters: environment=dev
+            deploymentMode: 'Incremental'
+
+    deploy_test:
+        runs-on: ubuntu-22.04
+        needs: deploy_dev
+        steps:
+        - name: 'Checkout'
+          uses: actions/checkout@v2
+        - name: 'Deploy'
+          run: echo "Deploying to ${{ vars.RESOURCE_GROUP_NAME }}!"
+        - name: 'Login to Azure'
+          uses: azure/login@v1
+          with:
+                creds: ${{ secrets.SERVICE_PRINCIPAL }}
+        - name: 'Deploy ARM Template'
+          uses: azure/arm-deploy@v2
+          with:
+            scope: 'resourcegroup'
+            resourceGroupName: ${{ vars.RESOURCE_GROUP_NAME }}
+            template: './InfrastructureAsCode/main.bicep'
+            parameters: environment=test
             deploymentMode: 'Incremental'

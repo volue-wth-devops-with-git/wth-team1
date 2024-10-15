@@ -1,5 +1,5 @@
 @description('Environment of the web app')
-param environment string = 'dev'
+param environment string
 
 @description('Location of services')
 param location string = resourceGroup().location
@@ -78,6 +78,10 @@ resource appServiceApp 'Microsoft.Web/sites@2020-12-01' = {
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
           value: appInsights.properties.InstrumentationKey
+        }
+        {
+          name: 'HELLO'
+          value: 'WORLD'
         }
         ]
       }
